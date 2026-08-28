@@ -1,0 +1,147 @@
+Prof
+├── codeprof : String    ← matricule
+├── nom       : String
+├── prenom    : String
+└── grade     : String
+
+Salle
+├── codesal     : Integer
+└── designation : String
+
+Occuper
+├── codeprof : String
+├── codesal  : Integer
+└── date     : LocalDate
+
+Base URL : http://localhost:8080/
+
+//--------------------------------------------------------------------
+
+GET /api/profs
+
+GET /api/profs/ENS001
+
+GET /api/profs/search?keyword=rak
+
+[
+    {
+        "codeprof": "ENS001",
+        "nom": "Rakoto",
+        "prenom": "Jean",
+        "grade": "Professeur"
+    },
+    {
+        "codeprof": "ENS002",
+        "nom": "Rabe",
+        "prenom": "Marie",
+        "grade": "Assistant"
+    }
+]
+
+//--------------------------------------------------------------------
+
+POST /api/profs
+
+{
+    "codeprof": "ENS003",
+    "nom": "Andria",
+    "prenom": "Paul",
+    "grade": "Maître de conférences"
+}
+
+//--------------------------------------------------------------------
+
+PUT /api/profs/ENS003
+
+{
+    "nom": "Andriam",
+    "prenom": "Paul",
+    "grade": "Professeur"
+}
+
+//--------------------------------------------------------------------
+
+DELETE /api/profs/ENS003
+
+//--------------------------------------------------------------------
+
+GET /api/salles
+
+GET /api/salles/2
+
+[
+    {
+        "codesal": 1,
+        "designation": "Salle A"
+    },
+    {
+        "codesal": 2,
+        "designation": "Salle Informatique"
+    }
+]
+
+//--------------------------------------------------------------------
+
+POST /api/salles
+
+{
+    "codesal": 2,
+    "designation": "Salle Informatique"
+}
+
+//--------------------------------------------------------------------
+
+PUT /api/salles/3
+
+{
+    "designation": "Salle de cours B"
+}
+
+//--------------------------------------------------------------------
+
+DELETE /api/salles/3
+
+//--------------------------------------------------------------------
+
+GET /api/occupations
+
+GET /api/occupations/ENS001/2/2026-08-28
+
+[
+    {
+        "id": {
+            "codeprof": "ENS001",
+            "codesal": 2,
+            "date": "2026-08-28"
+        },
+        "prof": {
+            "codeprof": "ENS001",
+            "nom": "Rakoto",
+            "prenom": "Jean",
+            "grade": "Professeur"
+        },
+        "salle": {
+            "codesal": 2,
+            "designation": "Salle A"
+        }
+    }
+]
+
+//--------------------------------------------------------------------
+
+POST /api/occupations
+
+{
+    "codeprof": "ENS001",
+    "codesal": 2,
+    "date": "2026-08-28"
+}
+
+//--------------------------------------------------------------------
+
+no PUT
+
+//--------------------------------------------------------------------
+
+DELETE /api/occupations/ENS001/2/2026-08-28
+
