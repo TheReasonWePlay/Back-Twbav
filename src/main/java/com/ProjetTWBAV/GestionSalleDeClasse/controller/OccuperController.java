@@ -29,7 +29,7 @@ public class OccuperController {
     @GetMapping("/{codeprof}/{codesal}/{date}")
     public Occuper getById(
             @PathVariable String codeprof,
-            @PathVariable Integer codesal,
+            @PathVariable String codesal,
             @PathVariable LocalDate date) {
 
         OccuperId id = new OccuperId(
@@ -50,7 +50,7 @@ public class OccuperController {
     @DeleteMapping("/{codeprof}/{codesal}/{date}")
     public void delete(
             @PathVariable String codeprof,
-            @PathVariable Integer codesal,
+            @PathVariable String codesal,
             @PathVariable LocalDate date) {
 
         OccuperId id = new OccuperId(

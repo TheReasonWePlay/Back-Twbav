@@ -19,7 +19,7 @@ public class SalleService {
         return salleRepository.findAll();
     }
 
-    public Salle getById(Integer id) {
+    public Salle getById(String id) {
         return salleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Salle introuvable"));
     }
@@ -28,7 +28,7 @@ public class SalleService {
         return salleRepository.save(salle);
     }
 
-    public void delete(Integer id) {
+    public void delete(String id) {
         salleRepository.deleteById(id);
     }
 }

@@ -23,7 +23,7 @@ public class SalleController {
     }
 
     @GetMapping("/{id}")
-    public Salle getById(@PathVariable Integer id) {
+    public Salle getById(@PathVariable String id) {
         return salleService.getById(id);
     }
 
@@ -34,7 +34,7 @@ public class SalleController {
 
     @PutMapping("/{id}")
     public Salle update(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @RequestBody Salle salle) {
 
         salle.setCodesal(id);
@@ -43,7 +43,7 @@ public class SalleController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable String id) {
         salleService.delete(id);
     }
 }

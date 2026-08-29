@@ -11,14 +11,14 @@ public class OccuperId implements Serializable {
 
     private String codeprof;
 
-    private Integer codesal;
+    private String codesal;
 
     private LocalDate date;
 
     public OccuperId() {
     }
 
-    public OccuperId(String codeprof, Integer codesal, LocalDate date) {
+    public OccuperId(String codeprof, String codesal, LocalDate date) {
         this.codeprof = codeprof;
         this.codesal = codesal;
         this.date = date;
@@ -32,11 +32,11 @@ public class OccuperId implements Serializable {
         this.codeprof = codeprof;
     }
 
-    public Integer getCodesal() {
+    public String getCodesal() {
         return codesal;
     }
 
-    public void setCodesal(Integer codesal) {
+    public void setCodesal(String codesal) {
         this.codesal = codesal;
     }
 

@@ -6,7 +6,7 @@ public class OccuperRequest {
 
     private String codeprof;
 
-    private Integer codesal;
+    private String codesal;
 
     private LocalDate date;
 
@@ -21,11 +21,11 @@ public class OccuperRequest {
         this.codeprof = codeprof;
     }
 
-    public Integer getCodesal() {
+    public String getCodesal() {
         return codesal;
     }
 
-    public void setCodesal(Integer codesal) {
+    public void setCodesal(String codesal) {
         this.codesal = codesal;
     }
 

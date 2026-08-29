@@ -7,18 +7,18 @@ import jakarta.persistence.*;
 public class Salle {
 
     @Id
-    private Integer codesal;
+    private String codesal;
 
     private String designation;
 
     public Salle() {
     }
 
-    public Integer getCodesal() {
+    public String getCodesal() {
         return codesal;
     }
 
-    public void setCodesal(Integer codesal) {
+    public void setCodesal(String codesal) {
         this.codesal = codesal;
     }
 
