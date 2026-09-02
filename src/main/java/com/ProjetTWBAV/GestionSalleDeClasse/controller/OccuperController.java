@@ -1,6 +1,7 @@
 package com.ProjetTWBAV.GestionSalleDeClasse.controller;
 
 import com.ProjetTWBAV.GestionSalleDeClasse.dto.OccuperRequest;
+import com.ProjetTWBAV.GestionSalleDeClasse.dto.OccuperResponse;
 import com.ProjetTWBAV.GestionSalleDeClasse.entity.Occuper;
 import com.ProjetTWBAV.GestionSalleDeClasse.entity.OccuperId;
 import com.ProjetTWBAV.GestionSalleDeClasse.service.OccuperService;
@@ -22,10 +23,16 @@ public class OccuperController {
     }
 
     @GetMapping
-    public List<Occuper> getAll() {
-        return occuperService.getAll();
+    public List<OccuperResponse> getAll() {
+        return occuperService.getAll()
+                .stream()
+                .map(o -> new OccuperResponse(
+                        o.getId().getCodeprof(),
+                        o.getId().getCodesal(),
+                        o.getId().getDate()
+                ))
+                .toList();
     }
-
     @GetMapping("/{codeprof}/{codesal}/{date}")
     public Occuper getById(
             @PathVariable String codeprof,
@@ -42,9 +49,17 @@ public class OccuperController {
     }
 
     @PostMapping
-    public Occuper create(@RequestBody OccuperRequest request) {
+    public OccuperResponse create(
+            @RequestBody OccuperRequest request) {
 
-        return occuperService.create(request);
+        Occuper occupation =
+                occuperService.create(request);
+
+        return new OccuperResponse(
+            occupation.getId().getCodeprof(),
+            occupation.getId().getCodesal(),
+            occupation.getId().getDate()
+        );
     }
 
     @DeleteMapping("/{codeprof}/{codesal}/{date}")

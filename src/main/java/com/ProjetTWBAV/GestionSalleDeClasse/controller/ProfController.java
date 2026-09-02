@@ -48,7 +48,9 @@ public class ProfController {
     }
     
     @GetMapping("/search")
-    public List<Prof> search(@RequestParam String recherche) {
-        return profService.searchByNomOrCode(recherche);
+    public List<Prof> search(
+            @RequestParam String keyword) {
+
+        return profService.searchByNomOrCode(keyword);
     }
 }
