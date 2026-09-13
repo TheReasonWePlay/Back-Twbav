@@ -150,3 +150,5 @@ DELETE /api/occupations/ENS001/2/2026-08-28
 Test CI auto (1)
 
 Test CI auto (2)
+
+Test CI auto (3)
