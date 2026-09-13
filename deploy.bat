@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 
 set "APP_DIR=C:\apps\GestionSalleDeClasse"
 set "JAR_NAME=GestionSalleDeClasse-0.0.1-SNAPSHOT.jar"
@@ -32,16 +32,22 @@ if exist "%PID_FILE%" (
 
     set /p OLD_PID=<"%PID_FILE%"
 
-    echo PID precedent : %OLD_PID%
+    echo PID precedent : !OLD_PID!
 
-    tasklist /FI "PID eq %OLD_PID%" | findstr "%OLD_PID%" >nul
+    if not "!OLD_PID!"=="" (
 
-    if not errorlevel 1 (
-        echo Arret du processus PID %OLD_PID%...
-        taskkill /PID %OLD_PID% /T /F >nul 2>&1
-        timeout /t 2 /nobreak >nul
+        tasklist /FI "PID eq !OLD_PID!" | findstr "!OLD_PID!" >nul
+
+        if not errorlevel 1 (
+            echo Arret du processus PID !OLD_PID!...
+            taskkill /PID !OLD_PID! /T /F >nul 2>&1
+            ping 127.0.0.1 -n 3 >nul
+        ) else (
+            echo Ancienne instance deja arretee.
+        )
+
     ) else (
-        echo Ancienne instance deja arretee.
+        echo Aucun PID valide trouve.
     )
 
     del "%PID_FILE%" >nul 2>&1
@@ -53,8 +59,7 @@ if exist "%PID_FILE%" (
 echo.
 echo [3/5] Demarrage de l'application...
 
-REM Important pour Jenkins :
-REM empeche Jenkins de tuer l'application a la fin du build
+REM Empeche Jenkins de tuer l'application apres le build
 set "JENKINS_NODE_COOKIE=dontKillMe"
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
@@ -68,7 +73,8 @@ if errorlevel 1 (
 echo.
 echo [4/5] Attente du demarrage...
 
-timeout /t 10 /nobreak >nul
+REM Attente de 10 secondes sans utiliser l'entree console
+ping 127.0.0.1 -n 11 >nul
 
 echo.
 echo [5/5] Verification de l'application...
@@ -81,7 +87,7 @@ if errorlevel 1 (
     echo ERREUR : l'API ne repond pas sur le port 8081.
     echo.
     echo ===== LOG APPLICATION =====
-    powershell -NoProfile -Command "Get-Content '%LOG_FILE%' -Tail 30"
+    if exist "%LOG_FILE%" powershell -NoProfile -Command "Get-Content '%LOG_FILE%' -Tail 30"
     echo.
     echo ===== LOG ERREUR =====
     if exist "%ERROR_LOG_FILE%" powershell -NoProfile -Command "Get-Content '%ERROR_LOG_FILE%' -Tail 30"
@@ -95,7 +101,7 @@ echo   DEPLOIEMENT REUSSI
 echo ========================================
 echo.
 echo API  : http://localhost:8081
-echo PID  : 
+echo PID  :
 type "%PID_FILE%"
 echo Logs : %LOG_FILE%
 echo.
