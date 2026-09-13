@@ -11,13 +11,10 @@ echo ========================================
 echo   DEPLOIEMENT GestionSalleDeClasse
 echo ========================================
 
-if not exist "%APP_DIR%" (
-    echo Creation du dossier %APP_DIR%
-    mkdir "%APP_DIR%"
-)
+if not exist "%APP_DIR%" mkdir "%APP_DIR%"
 
 echo.
-echo [1/4] Copie du JAR...
+echo [1/5] Copie du JAR...
 copy /Y "%JAR_SOURCE%" "%APP_DIR%\%JAR_NAME%"
 
 if errorlevel 1 (
@@ -26,7 +23,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/4] Arret de l'ancienne application...
+echo [2/5] Arret de l'ancienne application...
 
 if exist "%PID_FILE%" (
     set /p OLD_PID=<"%PID_FILE%"
@@ -37,7 +34,7 @@ if exist "%PID_FILE%" (
         echo Arret du processus PID %OLD_PID%...
         taskkill /PID %OLD_PID% /T /F
     ) else (
-        echo Ancien processus deja arrete.
+        echo Ancienne instance deja arretee.
     )
 
     del "%PID_FILE%"
@@ -46,25 +43,40 @@ if exist "%PID_FILE%" (
 )
 
 echo.
-echo [3/4] Demarrage de l'application...
+echo [3/5] Demarrage de l'application...
 
-start "GestionSalleDeClasse" /B ^
+cd /d "%APP_DIR%"
+
+start "GestionSalleDeClasse" /MIN ^
     "C:\Program Files\Java\jdk-25.0.4\bin\java.exe" ^
     -jar "%APP_DIR%\%JAR_NAME%" ^
     >> "%LOG_FILE%" 2>&1
 
+echo.
+echo [4/5] Attente du demarrage...
+
+timeout /t 10 /nobreak >nul
+
+echo.
+echo [5/5] Verification de l'application...
+
+powershell -NoProfile -Command "try { $r = Invoke-WebRequest -Uri 'http://localhost:8081/api/profs' -UseBasicParsing -TimeoutSec 5; if ($r.StatusCode -eq 200) { exit 0 } else { exit 1 } } catch { exit 1 }"
+
 if errorlevel 1 (
-    echo ERREUR : impossible de demarrer l'application.
+    echo.
+    echo ERREUR : l'API ne repond pas sur le port 8081.
+    echo Consultez :
+    echo %LOG_FILE%
     exit /b 1
 )
 
 echo.
-echo [4/4] Deploiement termine.
+echo ========================================
+echo   DEPLOIEMENT REUSSI
+echo ========================================
 echo.
-echo Application :
-echo http://localhost:8081
-echo.
-echo Logs :
-echo %LOG_FILE%
+echo API : http://localhost:8081
+echo Logs : %LOG_FILE%
 
 endlocal
+exit /b 0
